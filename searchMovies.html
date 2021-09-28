@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Data 1</title>
+    <style>
+        #info {
+            border: 5px dotted rgb(18, 156, 36);
+
+        }
+    </style>
+</head>
+<body>
+    <label>Name</label>
+    <input id="input" type="text" placeholder="Enter movie name"/>
+    <button id="search">Search</button>
+    <br/><br/>
+    <div id="info">
+        <table border="3">
+            <tr>
+                <td>Title</td>
+                <td>Year of Release</td>
+                <td>Lead Actors</td>
+                <td>Director</td>
+                <td>Ratings</td>
+            </tr>
+        </table>
+    </div>
+</body>
+<script type="text/javascript">
+    var btn = document.getElementById("search");
+    btn.addEventListener("click", handleSearch);
+
+    function handleSearch(){
+        var name = document.getElementById("input").value;
+        fetchingData("https://www.omdbapi.com/",name, "b343b210")
+        .then(function (res){
+        return res.json();
+        })
+        .then(function (res){
+            handleDisplayingInfo(res);
+        })
+        }
+
+    function fetchingData(url, name, api_kii){
+        return fetch(`${url}?t=${name}&apikey=${api_kii}`);
+    }
+
+    function handleDisplayingInfo(res){
+        var tbl = document.querySelector("table");
+
+        //creating row of the table
+        var tr = document.createElement("tr");
+
+        //adding title of the movie in table
+        var tit = document.createElement("td");
+        tit.textContent = res.Title;
+        tr.appendChild(tit);
+
+        //adding Year of Release of the movie
+        var yr = document.createElement("td");
+        yr.textContent = res.Year;
+        tr.appendChild(yr);
+
+        //adding name of all lead actors
+        var actors = document.createElement("td");
+        actors.textContent = res.Actors;
+        tr.appendChild(actors);
+
+        //adding name of the Director of the movie
+        var director = document.createElement("td");
+        director.textContent = res.Director;
+        tr.appendChild(director);
+
+        //adding name of the Ratings of the movie
+        var rating = document.createElement("td");
+        rating.textContent = res.Ratings[0].Value;
+        tr.appendChild(rating);
+
+        // adding all the columns (tds) to a row (tr)
+        tbl.appendChild(tr);
+
+    }
+
+</script>
+</html>
